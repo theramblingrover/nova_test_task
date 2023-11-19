@@ -1,6 +1,7 @@
 import io
 import logging
 import os.path
+from http import HTTPStatus
 
 from django.conf import settings
 from google.auth.transport.requests import Request
@@ -17,24 +18,29 @@ logger = logging.getLogger(__name__)
 
 class CreateDocumentView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
-        print(request.data)
         file_id = create_file(request)
         if not file_id:
-            return Response({"error": "File not created"})
-        return Response({"id": file_id})
+            return Response(
+                {"error": "File not created"}, status=HTTPStatus.BAD_REQUEST
+            )
+        return Response({"id": file_id}, status=HTTPStatus.CREATED)
 
 
 def create_file(request):
     creds = None
     if os.path.exists(settings.TOKEN_FILE):
-        creds = Credentials.from_authorized_user_file(settings.TOKEN_FILE, settings.SCOPES)
+        creds = Credentials.from_authorized_user_file(
+            settings.TOKEN_FILE, settings.SCOPES
+        )
         logger.info("Token found")
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
             logger.info("Refreshing token")
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(settings.CREDS_FILE, settings.SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                settings.CREDS_FILE, settings.SCOPES
+            )
             creds = flow.run_local_server(port=0)
         with open(settings.TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
@@ -42,7 +48,10 @@ def create_file(request):
     data = request.data.get("data", "").encode()
     service = build("drive", "v3", credentials=creds)
     media_body = MediaIoBaseUpload(io.BytesIO(data), mimetype="text/plain")
-    body = {"name": request.data.get("name"), "mimeType": "application/vnd.google-apps.document"}
+    body = {
+        "name": request.data.get("name"),
+        "mimeType": "application/vnd.google-apps.document",
+    }
     try:
         file = (
             service.files()
