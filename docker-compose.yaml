@@ -8,6 +8,8 @@ services:
       - .env
     volumes:
       - secret_vol:/app/secrets/
+    ports:
+      - 58000:8000
 
     command: uvicorn amo_test_task.asgi:application --host 0.0.0.0
 
