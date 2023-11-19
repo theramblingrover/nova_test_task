@@ -19,6 +19,8 @@ class CreateDocumentView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         print(request.data)
         file_id = create_file(request)
+        if not file_id:
+            return Response({"error": "File not created"})
         return Response({"id": file_id})
 
 
@@ -32,9 +34,7 @@ def create_file(request):
             creds.refresh(Request())
             logger.info("Refreshing token")
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                settings.CREDS_FILE, settings.SCOPES
-            )
+            flow = InstalledAppFlow.from_client_secrets_file(settings.CREDS_FILE, settings.SCOPES)
             creds = flow.run_local_server(port=0)
         with open(settings.TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
@@ -42,19 +42,19 @@ def create_file(request):
     data = request.data.get("data", "").encode()
     service = build("drive", "v3", credentials=creds)
     media_body = MediaIoBaseUpload(io.BytesIO(data), mimetype="text/plain")
-    body = {
-                "name": request.data.get("name"),
-                "mimeType": "application/vnd.google-apps.document"
-            }
+    body = {"name": request.data.get("name"), "mimeType": "application/vnd.google-apps.document"}
     try:
-        file = service.files().create(
-            body=body,
-            media_body=media_body,
-            media_mime_type='text/plain',
-            fields='id',
-        ).execute()
-        file_id = file["id"]
+        file = (
+            service.files()
+            .create(
+                body=body,
+                media_body=media_body,
+                media_mime_type="text/plain",
+                fields="id",
+            )
+            .execute()
+        )
+        file_id = file.get("id", None)
         return file_id
     except HttpError as e:
         logger.error("Error %s occurred accessing Google API" % e)
-

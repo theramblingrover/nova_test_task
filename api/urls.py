@@ -4,6 +4,4 @@ from api.views import CreateDocumentView
 
 app_name = "api"
 
-urlpatterns = [
-    path("touch/", CreateDocumentView.as_view())
-]
+urlpatterns = [path("touch/", CreateDocumentView.as_view())]

@@ -1,3 +1,3 @@
 import os
 
-DEBUG = os.getenv('DEBUG', False)
+DEBUG = os.getenv("DEBUG", False)
