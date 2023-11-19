@@ -1,0 +1,15 @@
+version: "3.5"
+services:
+  api:
+    image: theramblingrover/amo_api_test:latest
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - secret_vol:/app/secrets/
+
+    command: uvicorn amo_test_task.asgi:application --host 0.0.0.0
+
+volumes:
+  secret_vol:
