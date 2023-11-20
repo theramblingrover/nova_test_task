@@ -8,7 +8,8 @@
 
 Пример запроса:
 
-```POST server_url/api/v1/touch/
+```
+POST server_url/api/v1/touch/
 Content-Type: application/json
 
 {
