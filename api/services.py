@@ -1,6 +1,7 @@
 import io
 import logging
 import os
+from typing import Optional
 
 from django.conf import settings
 from google.auth.transport.requests import Request
@@ -13,7 +14,7 @@ from googleapiclient.http import MediaIoBaseUpload
 logger = logging.getLogger(__name__)
 
 
-def create_file(request):
+def create_file(request) -> Optional[str]:
     """
     Create a file in Google Drive using the Google Drive API.
 
