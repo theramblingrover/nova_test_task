@@ -19,3 +19,8 @@ Content-Type: application/json
 
 }
 ```
+Эндпоинт возвращает ответ:
+
+```
+{"id": created_file_id}
+```
