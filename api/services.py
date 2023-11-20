@@ -14,6 +14,17 @@ logger = logging.getLogger(__name__)
 
 
 def create_file(request):
+    """
+    Create a file in Google Drive using the Google Drive API.
+
+    :param request: The HTTP request object containing the data for creating the file.
+           It should contain the following attributes:
+        - data: The content of the file to be created, encoded as a string.
+        - name: The name of the file to be created.
+
+    :return: The unique identifier of the created file (file_id) if successful.
+
+    """
     creds = None
     if os.path.exists(settings.TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(

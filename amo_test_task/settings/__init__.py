@@ -7,12 +7,9 @@ from .debug import *
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-vnp%(8#g(h+@h4jfy6j%s6irejoop=c9qq^!9c(8b%he&%$73#")
 
 ALLOWED_HOSTS = ["*"]
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -54,7 +51,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "amo_test_task.wsgi.application"
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -70,8 +66,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -80,8 +74,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 STATIC_URL = "static/"
-
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
